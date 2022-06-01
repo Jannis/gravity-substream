@@ -1,3 +1,3 @@
-#[path = "eth.erc721.v1.rs"]
+#[path = "gravity.rs"]
 #[allow(dead_code)]
-pub mod erc721;
+pub mod gravity;

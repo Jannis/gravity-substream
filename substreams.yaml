@@ -1,6 +1,6 @@
 specVersion: v0.1.0
 package:
-  name: "substreams_template"
+  name: "gravity"
   version: v0.1.0
 
 imports:
@@ -8,28 +8,20 @@ imports:
 
 protobuf:
   files:
-    - erc721.proto
+    - gravity.proto
   importPaths:
     - ./proto
 
 binaries:
   default:
     type: wasm/rust-v1
-    file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
+    file: ./target/wasm32-unknown-unknown/release/gravity.wasm
 
 modules:
-  - name: map_transfers
+  - name: gravatars
     kind: map
-    initialBlock: 12287507
+    initialBlock: 6175244
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:eth.erc721.v1.Transfers
-
-  - name: store_transfers
-    kind: store
-    initialBlock: 12287507
-    updatePolicy: add
-    valueType: int64
-    inputs:
-      - map: map_transfers
+      type: proto:gravity.Gravatar

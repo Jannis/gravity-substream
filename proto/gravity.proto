@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package gravity;
+
+message Gravatars {
+  repeated Gravatar gravatars = 1;
+}
+
+message Gravatar {
+  string id = 1;
+  bytes owner = 2;
+  string display_name = 3;
+  string image_url = 4;
+}

@@ -237,6 +237,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "gravity"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "ethabi",
+ "getrandom",
+ "hex-literal",
+ "prost",
+ "prost-build",
+ "substreams",
+ "substreams-ethereum",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -770,19 +784,6 @@ dependencies = [
  "quote",
  "syn",
  "thiserror",
-]
-
-[[package]]
-name = "substreams-template"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "ethabi",
- "getrandom",
- "hex-literal",
- "prost",
- "substreams",
- "substreams-ethereum",
 ]
 
 [[package]]

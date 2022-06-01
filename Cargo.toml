@@ -1,9 +1,9 @@
 [package]
-name = "substreams-template"
+name = "gravity"
 version = "0.1.0"
-description = "Substream template demo project"
+description = "Gravity substream"
 edition = "2021"
-repository = "https://github.com/streamingfast/substreams-template"
+repository = "https://github.com/edgeandnode/gravity-substream"
 
 [lib]
 crate-type = ["cdylib"]
@@ -23,6 +23,7 @@ getrandom = { version = "0.2", features = ["custom"] }
 
 [build-dependencies]
 anyhow = "1"
+prost-build = "0.10.4"
 substreams-ethereum = "0.1.0"
 
 [profile.release]

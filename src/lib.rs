@@ -1,64 +1,50 @@
 mod abi;
 mod pb;
-use hex_literal::hex;
-use pb::erc721;
-use substreams::{log, store, Hex};
-use substreams_ethereum::{pb::eth::v1 as eth, NULL_ADDRESS};
 
-// Bored Ape Club Contract
-const TRACKED_CONTRACT: [u8; 20] = hex!("bc4ca0eda7647a8ab7c2061c2e118a18a936f13d");
+use hex_literal::hex;
+use substreams::{log, store, Hex};
+use substreams_ethereum::pb::eth::v1 as eth;
+
+use abi::gravity::events;
+use pb::gravity::{Gravatar, Gravatars};
+
+// Gravity contract
+const GRAVITY_ADDRESS: [u8; 20] = hex!("2e645469f354bb4f5c8a05b3b30a929361cf77ec");
 
 substreams_ethereum::init!();
 
 /// Extracts transfers events from the contract
 #[substreams::handlers::map]
-fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::errors::Error> {
-    let mut transfers: Vec<erc721::Transfer> = vec![];
-    for trx in blk.transaction_traces {
-        transfers.extend(trx.receipt.unwrap().logs.iter().filter_map(|log| {
-            if log.address != TRACKED_CONTRACT {
-                return None;
-            }
+fn gravatars(block: eth::Block) -> Result<Gravatars, substreams::errors::Error> {
+    let logs = block
+        .transaction_traces
+        .iter()
+        .map(|tx| {
+            tx.receipt
+                .as_ref()
+                .unwrap()
+                .logs
+                .iter()
+                .filter(|log| log.address == GRAVITY_ADDRESS)
+        })
+        .flatten();
 
-            log::info!("NFT Contract {} invoked", Hex(&TRACKED_CONTRACT));
+    // log::info!("{:?}", logs);
 
-            if !abi::erc721::events::Transfer::match_log(log) {
-                return None;
-            }
+    let mut gravatars = vec![];
 
-            let transfer = abi::erc721::events::Transfer::must_decode(log);
+    for log in logs {
+        if events::NewGravatar::match_log(log) {
+            let event = events::NewGravatar::must_decode(log);
 
-            Some(erc721::Transfer {
-                trx_hash: trx.hash.clone(),
-                from: transfer.from,
-                to: transfer.to,
-                token_id: transfer.token_id.low_u64(),
-                ordinal: log.block_index as u64,
+            gravatars.push(Gravatar {
+                id: format!("{}", event.id),
+                owner: event.owner,
+                display_name: event.display_name,
+                image_url: event.image_url,
             })
-        }));
-    }
-
-    Ok(erc721::Transfers { transfers })
-}
-
-/// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
-#[substreams::handlers::store]
-fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
-    log::info!("NFT state builder");
-    for transfer in transfers.transfers {
-        if transfer.from != NULL_ADDRESS {
-            log::info!("Found a transfer out {}", Hex(&transfer.trx_hash));
-            s.add(transfer.ordinal, generate_key(&transfer.from), -1);
-        }
-
-        if transfer.to != NULL_ADDRESS {
-            log::info!("Found a transfer in {}", Hex(&transfer.trx_hash));
-            s.add(transfer.ordinal, generate_key(&transfer.to), 1);
         }
     }
-}
 
-fn generate_key(holder: &Vec<u8>) -> String {
-    return format!("total:{}:{}", Hex(holder), Hex(TRACKED_CONTRACT));
+    Ok(Gravatars { gravatars })
 }
-
