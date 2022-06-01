@@ -29,7 +29,7 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
         })
         .flatten();
 
-    Ok(GravatarUpdates {
+    let updates = GravatarUpdates {
         updates: logs
             .filter_map(|log| {
                 if events::NewGravatar::match_log(log) {
@@ -57,5 +57,9 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
                 }
             })
             .collect(),
-    })
+    };
+
+    log::debug!("UPDATES: {}", format!("{:#?}", updates));
+
+    Ok(updates)
 }
