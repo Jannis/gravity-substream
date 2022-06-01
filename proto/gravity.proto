@@ -2,13 +2,14 @@ syntax = "proto3";
 
 package gravity;
 
-message Gravatars {
-  repeated Gravatar gravatars = 1;
+message GravatarUpdates {
+  repeated GravatarUpdate updates = 1;
 }
 
-message Gravatar {
+message GravatarUpdate {
   string id = 1;
   bytes owner = 2;
   string display_name = 3;
   string image_url = 4;
+  uint64 ordinal = 5;
 }

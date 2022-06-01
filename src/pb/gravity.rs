@@ -1,10 +1,10 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Gravatars {
+pub struct GravatarUpdates {
     #[prost(message, repeated, tag="1")]
-    pub gravatars: ::prost::alloc::vec::Vec<Gravatar>,
+    pub updates: ::prost::alloc::vec::Vec<GravatarUpdate>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Gravatar {
+pub struct GravatarUpdate {
     #[prost(string, tag="1")]
     pub id: ::prost::alloc::string::String,
     #[prost(bytes="vec", tag="2")]
@@ -13,4 +13,6 @@ pub struct Gravatar {
     pub display_name: ::prost::alloc::string::String,
     #[prost(string, tag="4")]
     pub image_url: ::prost::alloc::string::String,
+    #[prost(uint64, tag="5")]
+    pub ordinal: u64,
 }

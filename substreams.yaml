@@ -18,10 +18,10 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/gravity.wasm
 
 modules:
-  - name: gravatars
+  - name: gravatar_updates
     kind: map
-    initialBlock: 6175244
+    initialBlock: 6200807
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:gravity.Gravatar
+      type: proto:gravity.GravatarUpdates
