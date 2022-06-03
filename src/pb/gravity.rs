@@ -7,12 +7,23 @@ pub struct GravatarUpdates {
 pub struct GravatarUpdate {
     #[prost(string, tag="1")]
     pub id: ::prost::alloc::string::String,
-    #[prost(bytes="vec", tag="2")]
-    pub owner: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="2")]
+    pub owner: ::prost::alloc::string::String,
     #[prost(string, tag="3")]
     pub display_name: ::prost::alloc::string::String,
     #[prost(string, tag="4")]
     pub image_url: ::prost::alloc::string::String,
     #[prost(uint64, tag="5")]
     pub ordinal: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Gravatar {
+    #[prost(string, tag="1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub owner: ::prost::alloc::string::String,
+    #[prost(string, tag="3")]
+    pub display_name: ::prost::alloc::string::String,
+    #[prost(string, tag="4")]
+    pub image_url: ::prost::alloc::string::String,
 }

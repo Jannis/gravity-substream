@@ -30,3 +30,6 @@ substreams-ethereum = "0.1.0"
 lto = true
 opt-level = 's'
 strip = "debuginfo"
+
+[dependencies]
+hex = "0.4.3"

@@ -2,7 +2,7 @@ mod abi;
 mod pb;
 
 use hex_literal::hex;
-use substreams::{log, store, Hex};
+use substreams::{proto, store};
 use substreams_ethereum::pb::eth::v1 as eth;
 
 use abi::gravity::events;
@@ -37,7 +37,7 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
 
                     Some(GravatarUpdate {
                         id: format!("{}", event.id),
-                        owner: event.owner,
+                        owner: hex::encode(event.owner),
                         display_name: event.display_name,
                         image_url: event.image_url,
                         ordinal: log.block_index as u64,
@@ -47,7 +47,7 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
 
                     Some(GravatarUpdate {
                         id: format!("{}", event.id),
-                        owner: event.owner,
+                        owner: hex::encode(event.owner),
                         display_name: event.display_name,
                         image_url: event.image_url,
                         ordinal: log.block_index as u64,
@@ -59,7 +59,13 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
             .collect(),
     };
 
-    log::debug!("UPDATES: {}", format!("{:#?}", updates));
-
     Ok(updates)
+}
+
+#[substreams::handlers::store]
+fn gravatars(updates: GravatarUpdates, store: store::StoreSet) {
+    for update in updates.updates {
+        let id = format!("{}", update.id);
+        store.set(update.ordinal, id, &proto::encode(&update).unwrap());
+    }
 }

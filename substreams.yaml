@@ -25,3 +25,10 @@ modules:
       - source: sf.ethereum.type.v1.Block
     output:
       type: proto:gravity.GravatarUpdates
+  - name: gravatars
+    kind: store
+    initialBlock: 6200807
+    updatePolicy: set
+    valueType: proto:gravity.Gravatar
+    inputs:
+      - map: gravatar_updates
