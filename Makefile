@@ -2,9 +2,13 @@
 build:
 	cargo build --target wasm32-unknown-unknown --release
 
-.PHONY: stream
-stream:
-	substreams run -e api-dev.streamingfast.io:443 substreams.yaml map_transfers -s 12292922 -t +10
+.PHONY: stream-updates
+stream-updates:
+	substreams run -e api-dev.streamingfast.io:443 substreams.yaml gravatar_updates
+
+.PHONY: stream-gravatars
+stream-gravatars:
+	substreams run -e api-dev.streamingfast.io:443 substreams.yaml gravatars
 
 .PHONY: codegen
 codegen:
