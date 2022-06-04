@@ -6,7 +6,7 @@ use substreams::{proto, store};
 use substreams_ethereum::pb::eth::v1 as eth;
 
 use abi::gravity::events;
-use pb::gravity::{GravatarUpdate, GravatarUpdates};
+use pb::gravity::{Gravatar, GravatarUpdate, GravatarUpdates};
 
 // Gravity contract
 const GRAVITY_ADDRESS: [u8; 20] = hex!("2e645469f354bb4f5c8a05b3b30a929361cf77ec");
@@ -65,7 +65,19 @@ fn gravatar_updates(block: eth::Block) -> Result<GravatarUpdates, substreams::er
 #[substreams::handlers::store]
 fn gravatars(updates: GravatarUpdates, store: store::StoreSet) {
     for update in updates.updates {
-        let id = format!("{}", update.id);
-        store.set(update.ordinal, id, &proto::encode(&update).unwrap());
+        let GravatarUpdate {
+            id,
+            owner,
+            display_name,
+            image_url,
+            ..
+        } = update;
+        let gravatar = Gravatar {
+            id: id.clone(),
+            owner,
+            display_name,
+            image_url,
+        };
+        store.set(update.ordinal, id, &proto::encode(&gravatar).unwrap());
     }
 }
